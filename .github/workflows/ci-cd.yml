@@ -17,9 +17,6 @@ jobs:
         with:
           node-version: 24
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
-
       - name: Install
         run: npm ci
 
@@ -29,7 +26,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Build Docker Image
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        run: |
+          echo ${{ secrets.GHCR_TOKEN }} | \
+          docker login ghcr.io -u vietantran1215 --password-stdin
+
+      - name: Build Image
         run: |
           docker build -t ghcr.io/vietantran1215/slp-api:${{ github.sha }} .
       
@@ -44,5 +49,5 @@ jobs:
             docker pull ghcr.io/vietantran1215/slp-api:${{ github.sha }} &&
             docker stop api || true &&
             docker rm api || true &&
-            docker run -d --name api -p 3000:3000 ghcr.io/org/nest-api:${{ github.sha }}
+            docker run -d --name api -p 3000:3000 ghcr.io/vietantran1215/slp-api:${{ github.sha }}
           "
