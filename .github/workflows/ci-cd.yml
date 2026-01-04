@@ -31,16 +31,15 @@ jobs:
 
       - name: Login to GHCR
         run: |
-          echo ${{ secrets.GHCR_TOKEN }} | \
+          echo ${{ secrets.GITHUB_TOKEN }} | \
           docker login ghcr.io -u vietantran1215 --password-stdin
 
-      - name: Build Image
+      - name: Build image
         run: |
           docker build -t ghcr.io/vietantran1215/slp-api:${{ github.sha }} .
-      
+
       - name: Push image
         run: |
-          echo ${{ secrets.GHCR_TOKEN }} | \ docker login ghcr.io -u USERNAME --password-stdin
           docker push ghcr.io/vietantran1215/slp-api:${{ github.sha }}
 
       - name: Deploy (VM example)
