@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   api:
     runs-on: ubuntu-latest
@@ -28,8 +32,8 @@ jobs:
       
       - name: Push image
         run: |
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
-          docker push ghcr.io/org/nest-api:${{ github.sha }}
+          echo ${{ secrets.GHCR_TOKEN }} | \ docker login ghcr.io -u USERNAME --password-stdin
+          docker push ghcr.io/vietantran1215/slp-api:${{ github.sha }}
 
       - name: Deploy (VM example)
         run: |
